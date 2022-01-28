@@ -1,0 +1,116 @@
+name: $(Date:yyyyMMdd)$(Rev:.r)
+
+parameters:
+  - name: name  # defaults for any parameters that aren't specified
+    default: ''
+  - name: vmImage
+    default: ''
+
+variables:
+  - name: System.Debug
+    value: false  
+  - name: TF_VAR_project_name
+    value: "kfsolapp"
+  - name: TF_VAR_bootstrap_name
+    value: "bootstrap"
+    - name: vmImageName
+    value: "ubuntu-latest"
+  - name: TF_VAR_region
+    value: "us-east-1"
+  - name: AWS_REGION
+    value: "us-east-1"
+  - name: BRANCH_NAME
+    value: $(Build.SourceBranchName)
+  - name: TERRAFORM
+    value: $(System.DefaultWorkingDirectory)/terraform_1.0.5
+  - name: TF_VAR_rstudio_app_name
+    value: "rstudio"
+  - name: SSOT
+    value: "ssot"  # dir where the basic terraform code is for each environment. will be used as source to copy to environment-subdirecotory
+
+trigger:
+- dev
+- stg
+- prd
+
+# no PR triggers
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+# You can organize pipeline jobs into stages. Stages are the major divisions in a pipeline: 
+#   "build this app", "run these tests", and "deploy to pre-production" are good examples of stages. 
+# They are logical boundaries in your pipeline where you can pause the pipeline and perform various checks.
+# Every pipeline has at least one stage even if you do not explicitly define it. 
+# You can also arrange stages into a dependency graph so that one stage runs before another one. 
+#There is a limit of 256 jobs for a stage.
+
+
+# I need stages because callng the same backend files when all is in one stage will result in an error. Because step names have to be unique
+stages:
+  - stage: backendbootstrap
+# ##########################################################################
+# Prepare account , with a ADO template ( https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema#template-references ) 
+# ##########################################################################
+    jobs:
+      - job: backendbootstrap
+        displayName: backendbootstrap
+        steps: 
+        # prepares files and folders for this stage and 
+        # prepares aws S3 buckets for terraform state file with Cloudformation.
+        - template: preps/azure-pipelines.yml
+          parameters:
+            TF_VAR_app_name: $(TF_VAR_bootstrap_name)
+            BRANCH_NAME: $(BRANCH_NAME)
+            TF_VAR_region: $(TF_VAR_region)
+            LIVEDIR: $(SSOT)/$(TF_VAR_bootstrap_name)
+
+        # deploy all you resources needed in the bootstrap configuration
+        - template: tfdeploy/azure-pipelines.yml
+          parameters:
+            TF_VAR_app_name: $(TF_VAR_bootstrap_name)
+            BRANCH_NAME: $(BRANCH_NAME)
+            TF_VAR_region: $(TF_VAR_region)
+            LIVEDIR: $(SSOT)/$(TF_VAR_bootstrap_name)
+
+# ##########################################################################
+# Prepare rstudio 
+# ##########################################################################
+  - stage: backendrstudio
+    # prepares files and folders for rstudio in this stage and prepares aws S3 buckets for terraform state file with Cloudformation.
+    jobs:
+      - job: waitForValidation
+        displayName: Wait for external validation  
+        pool: server    
+        timeoutInMinutes: 4320 # job times out in 3 days
+        steps:   
+        - task: ManualValidation@0
+          timeoutInMinutes: 1440 # task times out in 1 day
+          inputs:
+            notifyUsers: |
+              test@test.com
+              1robroos@gmail.com
+            instructions: 'Please validate the build configuration and resume'
+            onTimeout: 'resume'
+
+      - job: backendrstudio
+        displayName: backendrstudio
+        steps: 
+        # - task: ManualIntervention@8
+        #   inputs:
+        #     instructions: 'validate'
+        #     emailRecipients: '1robroos@gmail.com'
+        - template: preps/azure-pipelines.yml
+          parameters:
+            TF_VAR_app_name: $(TF_VAR_rstudio_app_name)
+            BRANCH_NAME: $(BRANCH_NAME)
+            TF_VAR_region: $(TF_VAR_region)
+            LIVEDIR: $(LIVEDIR)_$(TF_VAR_rstudio_app_name)  # where the rstudio source terraform code lives. live_rstudio
+
+        - template: tfdeploy/azure-pipelines.yml
+          parameters:
+            TF_VAR_app_name: $(TF_VAR_rstudio_app_name)
+            BRANCH_NAME: $(BRANCH_NAME)
+            TF_VAR_region: $(TF_VAR_region)
+            LIVEDIR: $(LIVEDIR)_$(TF_VAR_rstudio_app_name)
