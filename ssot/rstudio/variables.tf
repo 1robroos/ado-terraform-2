@@ -1,7 +1,7 @@
 ### Dynamic Values ------------------------------
 ### ---------------------------------------------
 variable "ec2_type" {
-  type = map
+  type = map(any)
   default = {
     dev = "t3a.nano"
     stg = "t3a.micro"
@@ -14,10 +14,10 @@ variable "ec2_type" {
 ### Locals Values -------------------------------
 ### ---------------------------------------------
 locals {
-  prefix   = "${var.app_name}-${var.environment}"
+  prefix = "${var.app_name}-${var.environment}"
   #ec2_type = "${lookup(var.ec2_type, var.environment)}"
   ec2_type = lookup(var.ec2_type, var.environment)
-  
+
 
   tags = {
     "Environment" : var.environment,
