@@ -23,10 +23,10 @@ resource "aws_security_group" "zomaar_rstudio_SG" {
   description = "Security group for ${var.environment} app"
   vpc_id      = "vpc-06bceb9729a541195"
   tags = {
-    Name     = format("%s-zomaar_rstudio_SG-sg", var.environment)
-    Terrafom = true
-    Stage    = var.environment
-    bootstrapoutput = var.bootstrap_bucket
+    Name                  = format("%s-zomaar_rstudio_SG-sg", var.environment)
+    Terrafom              = true
+    Stage                 = var.environment
+    bootstrapoutputbucket = data.terraform_remote_state.bootstrap.output.s3_bucket_url
   }
 }
 
@@ -52,9 +52,9 @@ module "ec2_instance_rstudio_2" {
 
   name = "templates-single-instance_rstudio_${var.environment}"
 
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = local.ec2_type
-  monitoring             = true
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = local.ec2_type
+  monitoring    = true
   #vpc_security_group_ids = [aws_security_group.zomaar_rstudio_SG.id]
 
   tags = {

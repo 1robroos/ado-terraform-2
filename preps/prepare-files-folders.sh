@@ -55,6 +55,13 @@ cp  "${DIRSOURCE}"/.tflint.hcl "${DIRTOCREATE}"/
 sed -i.bak 's~AWS_REGION~'"$AWS_REGION"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
 sed -i.bak 's~APP_NAME~'"$TF_VAR_app_name"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
 sed -i.bak 's~ENVIRONMENT~'"$BRANCH_NAME"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
+if [[ -e data.tf ]]; then
+    echo "for remote states defined in data.tf, replace ENVIRONMENT"
+    sed -i.bak 's~ENVIRONMENT~'"$BRANCH_NAME"'~' "${DIRTOCREATE}/data.tf"
+else
+    echo "No data.tf to process"
+fi
+
 mv "${DIRTOCREATE}/${_BACKEND_TPL}" "${DIRTOCREATE}"/backend.tf
 echo "[LOG] Prepared files and folders for the environment - $DIRTOCREATE"
 ls -lah "$DIRTOCREATE"

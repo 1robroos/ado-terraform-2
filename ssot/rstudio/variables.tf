@@ -15,7 +15,8 @@ variable "ec2_type" {
 ### ---------------------------------------------
 locals {
   prefix   = "${var.app_name}-${var.environment}"
-  ec2_type = "${lookup(var.ec2_type, var.environment)}"
+  #ec2_type = "${lookup(var.ec2_type, var.environment)}"
+  ec2_type = lookup(var.ec2_type, var.environment)
   
 
   tags = {
