@@ -2,11 +2,13 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: |
   Create terraform backend resources
 Parameters:
+  ProjectName:
+    Type: String
   AppName:
     Type: String
   Environment:
     Type: String
-    Description: Select the environment to deploy
+    Description:  environment to deploy
     ConstraintDescription: Must be any of the available options
 
 Resources:
