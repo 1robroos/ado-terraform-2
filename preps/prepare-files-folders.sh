@@ -44,7 +44,7 @@ fi
 # echo dir to create = $DIRTOCREATE
 
 DIRSOURCE=$LIVE_DIR
-DIRTOCREATE=${BRANCH_NAME}/${TF_VAR_app_name}
+DIRTOCREATE=${BRANCH_NAME}/${TF_VAR_app_name}  # bijv dev/bootstrap of dev/rstudio
 echo DIRTOCREATE dir = ${DIRTOCREATE}
 mkdir -p "${DIRTOCREATE}"/
 
@@ -52,6 +52,8 @@ echo "Copying ${DIRSOURCE} to ${DIRTOCREATE}"
 cp "${DIRSOURCE}"/* "${DIRTOCREATE}"/
 echo "Copying tflint configuration file for aws provider"
 cp  "${DIRSOURCE}"/.tflint.hcl "${DIRTOCREATE}"/
+
+echo "replace hard coded settings in ${DIRTOCREATE}/${_BACKEND_TPL}"
 sed -i.bak 's~AWS_REGION~'"$AWS_REGION"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
 sed -i.bak 's~APP_NAME~'"$TF_VAR_app_name"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
 sed -i.bak 's~ENVIRONMENT~'"$BRANCH_NAME"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
@@ -64,10 +66,9 @@ if [[ -e ${DIRTOCREATE}/data.tf ]]; then
     cat ${DIRTOCREATE}/data.tf
     echo
 else
-    echo "No data.tf to process"
-    ls -l  ${DIRTOCREATE}/data.tf
+    echo "No data.tf to process for ${TF_VAR_app_name}"
+    #ls -l  ${DIRTOCREATE}/data.tf
     ls -l ${DIRTOCREATE}
-    exit
 fi
 
 mv "${DIRTOCREATE}/${_BACKEND_TPL}" "${DIRTOCREATE}"/backend.tf
