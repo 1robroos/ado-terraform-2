@@ -13,7 +13,7 @@ variables:
     value: "kfsolapp"
   - name: TF_VAR_bootstrap_name
     value: "bootstrap"
-    - name: vmImageName
+  - name: vmImageName
     value: "ubuntu-latest"
   - name: TF_VAR_region
     value: "us-east-1"
