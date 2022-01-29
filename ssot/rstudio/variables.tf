@@ -47,6 +47,6 @@ variable "environment" {
 variable bootstrap_bucket {
    type        = string
   description = "Bucket created by bootstrap"
-  value = 
+  #value = 
 } 
 }

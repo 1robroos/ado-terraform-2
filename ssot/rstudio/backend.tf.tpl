@@ -6,8 +6,6 @@ terraform {
     dynamodb_table = "APP_NAME-state-lock-ENVIRONMENT"
     encrypt        = false
   }
-}
-
 
 data "terraform_remote_state" "bootstrap" {
   backend = "s3"
