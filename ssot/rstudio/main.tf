@@ -26,7 +26,7 @@ resource "aws_security_group" "zomaar_rstudio_SG" {
     Name                  = format("%s-zomaar_rstudio_SG-sg", var.environment)
     Terrafom              = true
     Stage                 = var.environment
-    bootstrapoutputbucket = data.terraform_remote_state.bootstrap.output.s3_bucket_url
+    bootstrapoutputbucket = data.terraform_remote_state.bootstrap.outputs.s3_bucket_url
   }
 }
 
