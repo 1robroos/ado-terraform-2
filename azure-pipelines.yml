@@ -81,7 +81,7 @@ stages:
 # ##########################################################################
 # Prepare rstudio 
 # ##########################################################################
-  - stage: app-rstudio
+  - stage: app_rstudio
     # prepares files and folders for rstudio in this stage and prepares aws S3 buckets for terraform state file with Cloudformation.
     jobs:
       - job: waitForValidation
@@ -98,8 +98,8 @@ stages:
             instructions: 'Please validate the build configuration and resume'
             onTimeout: 'resume'
 
-      - job: app-rstudio
-        displayName: app-rstudio
+      - job: app_rstudio
+        displayName: app_rstudio
         dependsOn: waitForValidation
         condition: |
           and
