@@ -231,7 +231,7 @@ steps:
                 echo "Now apply will run:"
                  apply  -input=false ./out_plan_file
             else
-                echo apply has failed! THis is else."
+                echo "apply has failed! THis is else."
                 exit 1
             fi
   name: tfapply
