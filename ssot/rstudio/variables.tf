@@ -49,4 +49,3 @@ variable bootstrap_bucket {
   description = "Bucket created by bootstrap"
   #value = 
 } 
-}
