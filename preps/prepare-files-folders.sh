@@ -54,12 +54,12 @@ echo "Copying tflint configuration file for aws provider"
 cp  "${DIRSOURCE}"/.tflint.hcl "${DIRTOCREATE}"/
 sed -i.bak 's~AWS_REGION~'"$AWS_REGION"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
 sed -i.bak 's~APP_NAME~'"$TF_VAR_app_name"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
-sed -i.bak 's~ENVIRONMENT~'"$_BRANCH_NAME"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
+sed -i.bak 's~ENVIRONMENT~'"$BRANCH_NAME"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
 mv "${DIRTOCREATE}/${_BACKEND_TPL}" "${DIRTOCREATE}"/backend.tf
 echo "[LOG] Prepared files and folders for the environment - $DIRTOCREATE"
 ls -lah "$DIRTOCREATE"
 cat "${DIRTOCREATE}"/backend.tf
 echo "SHow PWD $PWD"
-ls -l
+ls -ltR
 cd ${DIRTOCREATE}
 echo "Now changed the branch subdir $PWD"  #/home/vsts/work/1/s/preps/dev
