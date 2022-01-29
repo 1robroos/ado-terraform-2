@@ -63,14 +63,16 @@ stages:
         # prepares aws S3 buckets for terraform state file with Cloudformation.
         - template: preps/azure-pipelines.yml
           parameters:
+            TF_VAR_project_name: $(TF_VAR_project_name)
             TF_VAR_app_name: $(TF_VAR_bootstrap_name)
             BRANCH_NAME: $(BRANCH_NAME)
             TF_VAR_region: $(TF_VAR_region)
             LIVEDIR: $(SSOT)/$(TF_VAR_bootstrap_name)
 
-        # deploy all you resources needed in the bootstrap configuration
+        # deploy all your resources needed in the bootstrap configuration, for example securityhub
         - template: tfdeploy/azure-pipelines.yml
           parameters:
+            TF_VAR_project_name: $(TF_VAR_project_name)
             TF_VAR_app_name: $(TF_VAR_bootstrap_name)
             BRANCH_NAME: $(BRANCH_NAME)
             TF_VAR_region: $(TF_VAR_region)
@@ -79,7 +81,7 @@ stages:
 # ##########################################################################
 # Prepare rstudio 
 # ##########################################################################
-  - stage: backendrstudio
+  - stage: app-rstudio
     # prepares files and folders for rstudio in this stage and prepares aws S3 buckets for terraform state file with Cloudformation.
     jobs:
       - job: waitForValidation
@@ -96,8 +98,8 @@ stages:
             instructions: 'Please validate the build configuration and resume'
             onTimeout: 'resume'
 
-      - job: backendrstudio
-        displayName: backendrstudio
+      - job: app-rstudio
+        displayName: app-rstudio
         dependsOn: waitForValidation
         condition: |
           and

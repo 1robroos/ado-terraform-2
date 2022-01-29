@@ -16,7 +16,7 @@ Resources:
     Properties:
       VersioningConfiguration:
         Status: Enabled
-      BucketName: !Sub ${AppName}-state-${Environment}
+      BucketName: !Sub ${ProjectName}-${AppName}-state-${Environment}
       PublicAccessBlockConfiguration:
         BlockPublicAcls: True
         BlockPublicPolicy: True
@@ -26,7 +26,7 @@ Resources:
   BackendDynamoDbTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub ${AppName}-state-lock-${Environment}
+      TableName: !Sub ${ProjectName}-${AppName}-state-lock-${Environment}
       BillingMode: PROVISIONED
       ProvisionedThroughput:
         ReadCapacityUnits: 1

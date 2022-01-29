@@ -15,8 +15,9 @@
 
 
 # 27-12-2021: created bucket name in dev is terraform-20211227154220019500000001
-resource "aws_s3_bucket" "app" {
+resource "aws_s3_bucket" "bootstrapbucket" {
   acl = "public-read"
+  bucket = "bootstrapbucket-${var.environment}"
 
   website {
     index_document = "index.html"
@@ -25,8 +26,8 @@ resource "aws_s3_bucket" "app" {
   tags = local.tags
 }
 
-resource "aws_s3_bucket_object" "app" {
-  bucket       = aws_s3_bucket.app.id
+resource "aws_s3_bucket_object" "bootstrapbucketObject" {
+  bucket       = aws_s3_bucket.bootstrapbucket.id
   key          = "index.html"
   acl          = "public-read"
   content      = "<h1>Welcome to the ${var.environment} environment</h1>"
@@ -37,8 +38,8 @@ resource "aws_s3_bucket_object" "app" {
 
 
 
-resource "aws_security_group" "zomaar" {
-  name        = format("%s-zomaar-sg", var.environment)
+resource "aws_security_group" "sg-bootstrapbucket" {
+  name        = format("%s-zomaar-bootstrapbucket-sg", var.environment)
   description = "Security group for ${var.environment} app"
   vpc_id      = "vpc-06bceb9729a541195"
   tags = {

@@ -1,5 +1,6 @@
 steps:
 - script: |
+    export TF_VAR_project_name=${{parameters.TF_VAR_project_name}}
     export TF_VAR_app_name=${{parameters.TF_VAR_app_name}}
     export BRANCH_NAME=${{parameters.BRANCH_NAME}}
     export LIVEDIR=${{parameters.LIVEDIR}}
@@ -25,7 +26,10 @@ steps:
     templateFile: 'preps/cloudformation/cfn-tfbackend.yml'
     templateParametersSource: 'inline'
     templateParameters: |
+      - ParameterKey: ProjectName
+        ParameterValue: ${{parameters.TF_VAR_project_name}}
       - ParameterKey: AppName
         ParameterValue: ${{parameters.TF_VAR_app_name}}
       - ParameterKey: Environment
         ParameterValue: ${{parameters.BRANCH_NAME}}
+  displayName: 'Cloudformation-create-S3'    
