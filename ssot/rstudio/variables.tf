@@ -45,8 +45,8 @@ variable "environment" {
 
 ### Tests output variable of bootstrap-----------
 ### ---------------------------------------------
-variable bootstrap_bucket {
-   type        = string
-  description = "Bucket created by bootstrap"
-  #value = 
-} 
+# variable bootstrap_bucket {
+#    type        = string
+#   description = "Bucket created by bootstrap"
+#   #value = 
+# } 
