@@ -1,4 +1,5 @@
 resource "aws_s3_bucket" "rstudio" {
+  bucket = "rstudiobucket-${var.environment}"
   acl = "public-read"
 
   website {
