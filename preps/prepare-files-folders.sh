@@ -5,6 +5,7 @@ LIVE_DIR=${LIVEDIR}
 echo var LIVE_DIR is passed through and has value $LIVE_DIR
 _BACKEND_TPL=${BACKEND_TPL:=backend.tf.tpl}
 BRANCH_NAME=${BRANCH_NAME}
+PROJECT_NAME=${TF_VAR_project_name}
 
 echo  TF_VAR_app_name = ${TF_VAR_app_name}
 echo  BRANCH_NAME =  ${BRANCH_NAME}
@@ -54,12 +55,15 @@ echo "Copying tflint configuration file for aws provider"
 cp  "${DIRSOURCE}"/.tflint.hcl "${DIRTOCREATE}"/
 
 echo "replace hard coded settings in ${DIRTOCREATE}/${_BACKEND_TPL}"
+sed -i.bak 's~PROJECT_NAME~'"$TF_VAR_project_name"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
 sed -i.bak 's~AWS_REGION~'"$AWS_REGION"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
 sed -i.bak 's~APP_NAME~'"$TF_VAR_app_name"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
 sed -i.bak 's~ENVIRONMENT~'"$BRANCH_NAME"'~' "${DIRTOCREATE}/${_BACKEND_TPL}"
 
 if [[ -e ${DIRTOCREATE}/data.tf ]]; then
     echo "for remote states defined in data.tf, replace ENVIRONMENT"
+    echo "The APP_NAME name you should have hardcoded"
+    sed -i.bak 's~PROJECT_NAME~'"$PROJECT_NAME"'~' "${DIRTOCREATE}/data.tf"
     sed -i.bak 's~ENVIRONMENT~'"$BRANCH_NAME"'~' "${DIRTOCREATE}/data.tf"
     sed -i.bak 's~AWS_REGION~'"$AWS_REGION"'~' "${DIRTOCREATE}/data.tf"
     echo "${DIRTOCREATE}/data.tf now looks like:"
