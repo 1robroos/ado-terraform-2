@@ -13,7 +13,7 @@ resource "aws_s3_bucket_object" "rstudio" {
   bucket       = aws_s3_bucket.rstudio.id
   key          = "index.html"
   acl          = "public-read"
-  content      = "<h1>Welcome to the ${var.environment} rstudio environment</h1>"
+  content      = "<h2>Welcome to the ${var.environment} rstudio environment, this is bootstrap bucket ${data.terraform_remote_state.bootstrap.outputs.s3_bucket_url}</h2> bootstrapbucket-dev.s3-website-us-east-1.amazonaws.com"
   content_type = "text/html"
 
   tags = local.tags
