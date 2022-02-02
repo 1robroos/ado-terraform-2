@@ -44,6 +44,13 @@ steps:
       else
         echo "All is fine for tflint to continu."
       fi
+
+      if [[ -e data.tf ]]
+      then
+      echo "show data.tf"
+      cat data.tf
+      fi
+
   name: tflint
 
 
