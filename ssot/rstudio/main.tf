@@ -59,20 +59,20 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-# module "ec2_instance_rstudio_2" {
-#   source  = "terraform-aws-modules/ec2-instance/aws"
-#   version = "~> 3.0"
+module "ec2_instance_rstudio_2" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "~> 3.0"
 
-#   name = "templates-single-instance_rstudio_${var.environment}"
+  name = "templates-single-instance_rstudio_${var.environment}"
 
-#   ami           = data.aws_ami.ubuntu.id
-#   instance_type = local.ec2_type
-#   monitoring    = true
-#   #vpc_security_group_ids = [aws_security_group.zomaar_rstudio_SG.id]
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = local.ec2_type
+  monitoring    = true
+  #vpc_security_group_ids = [aws_security_group.zomaar_rstudio_SG.id]
 
-#   tags = {
-#     Terraform   = "true"
-#     Environment = var.environment
-#   }
-# }
+  tags = {
+    Terraform   = "true"
+    Environment = var.environment
+  }
+}
 
