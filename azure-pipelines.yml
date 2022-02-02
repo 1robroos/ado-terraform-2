@@ -10,7 +10,7 @@ variables:
   - name: System.Debug
     value: false
   - name: TF_VAR_project_name
-    value: "kfsolapp"
+    value: "athlondemo"
   - name: TF_VAR_bootstrap_name
     value: "bootstrap"
   - name: vmImageName
@@ -86,7 +86,6 @@ stages:
 # Prepare rstudio 
 # ##########################################################################
   - stage: app_rstudio
-    # prepares files and folders for rstudio in this stage and prepares aws S3 buckets for terraform state file with Cloudformation.
     jobs:
       - job: waitForValidation
         displayName: Wait for external validation  
@@ -112,15 +111,15 @@ stages:
               not(canceled())
             )
         steps: 
-        - template: preps/azure-pipelines.yml
+        - template: preps/azure-pipelines.yml ## prepares files and folders for rstudio in this stage and prepares aws S3 buckets for terraform state file with Cloudformation.
           parameters:
             TF_VAR_project_name: $(TF_VAR_project_name)
             TF_VAR_app_name: $(TF_VAR_rstudio_app_name)
             BRANCH_NAME: $(BRANCH_NAME)
             TF_VAR_region: $(TF_VAR_region)
-            LIVEDIR: $(SSOT)/$(TF_VAR_rstudio_app_name)  # where the rstudio source terraform code lives. live_rstudio
+            LIVEDIR: $(SSOT)/$(TF_VAR_rstudio_app_name)  # where the rstudio source terraform code lives.
 
-        - template: tfdeploy/azure-pipelines.yml
+        - template: tfdeploy/azure-pipelines.yml 
           parameters:
             TF_VAR_project_name: $(TF_VAR_project_name)
             TF_VAR_app_name: $(TF_VAR_rstudio_app_name)
