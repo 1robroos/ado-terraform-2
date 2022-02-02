@@ -29,8 +29,12 @@ variables:
     value: "rstudio"
   - name: SSOT
     value: "ssot"  # dir where the basic terraform code is for each environment. will be used as source to copy to environment-subdirecotory
+  - name: awsnonprdaccountuser
+    value: "aws-AzureDevopsiamuser"
+  - name: awsprdaccountuser
+    value: "ADO-cupidoprod"
 
-trigger:
+trigger:  
 - dev
 - stg
 - prd
