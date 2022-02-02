@@ -3,7 +3,7 @@ data "terraform_remote_state" "bootstrap" {
   config = {
     region         = "AWS_REGION"
     bucket         = "PROJECT_NAME-bootstrap-terraform-state-ENVIRONMENT"
-    key            = "terraform.tfstate"
+    key            = "bootstrap/terraform.tfstate"
     dynamodb_table = "PROJECT_NAME-bootstrap-terraform-state-lock-ENVIRONMENT"
     encrypt        = false
   }
