@@ -14,7 +14,6 @@
 # }
 
 
-# 27-12-2021: created bucket name in dev is terraform-20211227154220019500000001
 resource "aws_s3_bucket" "bootstrapbucket" {
   acl = "public-read"
   bucket = "bootstrapbucket-${var.environment}"
@@ -36,8 +35,6 @@ resource "aws_s3_bucket_object" "bootstrapbucketObject" {
   tags = local.tags
 }
 
-
-
 resource "aws_security_group" "sg-bootstrapbucket" {
   name        = format("%s-zomaar-bootstrapbucket-sg", var.environment)
   description = "Security group for ${var.environment} app"
@@ -46,5 +43,16 @@ resource "aws_security_group" "sg-bootstrapbucket" {
     Name = format("%s-bootstrap-sg", var.environment)
     Terrafom = true
     Stage = var.environment
+  }
+}
+
+resource "aws_security_group" "extra_resources_bootstrap_SG" {
+  name        = format("%s-extra_resources_bootstrap_SG-sg", var.environment)
+  description = "Security group _2_for ${var.environment} app"
+  vpc_id      = "vpc-06bceb9729a541195"
+  tags = {
+    Name                  = format("%s-extra_resources_bootstrap_SG-sg", var.environment)
+    Terrafom              = true
+    Stage                 = var.environment
   }
 }

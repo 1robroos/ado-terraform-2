@@ -13,7 +13,7 @@ resource "aws_s3_bucket_object" "rstudio" {
   bucket       = aws_s3_bucket.rstudio.id
   key          = "index.html"
   acl          = "public-read"
-  content      = "<h2>Welcome to the ${var.environment} rstudio environment, this is bootstrap bucket ${data.terraform_remote_state.bootstrap.outputs.s3_bucket_url}</h2>"
+  content      = "<h2>Welcome to the ${var.environment} rstudio environment, I will give you the bucket now that was created in the bootstrap deployment:  ${data.terraform_remote_state.bootstrap.outputs.s3_bucket_url}</h2>"
   content_type = "text/html"
 
   tags = local.tags
@@ -25,6 +25,18 @@ resource "aws_security_group" "zomaar_rstudio_SG" {
   vpc_id      = "vpc-06bceb9729a541195"
   tags = {
     Name                  = format("%s-zomaar_rstudio_SG-sg", var.environment)
+    Terrafom              = true
+    Stage                 = var.environment
+    bootstrapoutputbucket = data.terraform_remote_state.bootstrap.outputs.s3_bucket_url
+  }
+}
+
+resource "aws_security_group" "zomaar_2_rstudio_SG" {
+  name        = format("%s-zomaar_2_rstudio_SG-sg", var.environment)
+  description = "Security group _2_for ${var.environment} app"
+  vpc_id      = "vpc-06bceb9729a541195"
+  tags = {
+    Name                  = format("%s-zomaar_2_rstudio_SG-sg", var.environment)
     Terrafom              = true
     Stage                 = var.environment
     bootstrapoutputbucket = data.terraform_remote_state.bootstrap.outputs.s3_bucket_url
