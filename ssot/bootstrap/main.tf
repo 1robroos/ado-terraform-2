@@ -30,7 +30,7 @@ resource "aws_s3_bucket_object" "bootstrapbucketObject" {
   bucket       = aws_s3_bucket.bootstrapbucket.id
   key          = "index.html"
   acl          = "public-read"
-  content      = "<h1>Welcome to the ${var.environment} environment</h1>"
+  content      = "<h1>Welcome to the bootstrap ${var.environment} environment</h1>"
   content_type = "text/html"
 
   tags = local.tags
@@ -43,7 +43,7 @@ resource "aws_security_group" "sg-bootstrapbucket" {
   description = "Security group for ${var.environment} app"
   vpc_id      = "vpc-06bceb9729a541195"
   tags = {
-    Name = format("%s-zomaar-sg", var.environment)
+    Name = format("%s-bootstrap-sg", var.environment)
     Terrafom = true
     Stage = var.environment
   }

@@ -13,7 +13,7 @@ resource "aws_s3_bucket_object" "rstudio" {
   bucket       = aws_s3_bucket.rstudio.id
   key          = "index.html"
   acl          = "public-read"
-  content      = "<h2>Welcome to the ${var.environment} rstudio environment, this is bootstrap bucket ${data.terraform_remote_state.bootstrap.outputs.s3_bucket_url}</h2> bootstrapbucket-dev.s3-website-us-east-1.amazonaws.com"
+  content      = "<h2>Welcome to the ${var.environment} rstudio environment, this is bootstrap bucket ${data.terraform_remote_state.bootstrap.outputs.s3_bucket_url}</h2>"
   content_type = "text/html"
 
   tags = local.tags
@@ -47,20 +47,20 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-module "ec2_instance_rstudio_2" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 3.0"
+# module "ec2_instance_rstudio_2" {
+#   source  = "terraform-aws-modules/ec2-instance/aws"
+#   version = "~> 3.0"
 
-  name = "templates-single-instance_rstudio_${var.environment}"
+#   name = "templates-single-instance_rstudio_${var.environment}"
 
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = local.ec2_type
-  monitoring    = true
-  #vpc_security_group_ids = [aws_security_group.zomaar_rstudio_SG.id]
+#   ami           = data.aws_ami.ubuntu.id
+#   instance_type = local.ec2_type
+#   monitoring    = true
+#   #vpc_security_group_ids = [aws_security_group.zomaar_rstudio_SG.id]
 
-  tags = {
-    Terraform   = "true"
-    Environment = var.environment
-  }
-}
+#   tags = {
+#     Terraform   = "true"
+#     Environment = var.environment
+#   }
+# }
 

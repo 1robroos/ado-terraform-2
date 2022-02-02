@@ -1,1 +1,0 @@
-#bootstrap_bucket = data.terraform_remote_state.bootstrap.output.s3_bucket_url
